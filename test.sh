@@ -5,3 +5,9 @@ go build -o ./stop ./cmd/stop
 go build -o ./installer ./cmd/installer
 
 ./start installer
+
+echo "Test without installer"
+
+go build -o ./start ./cmd/start
+
+./start
