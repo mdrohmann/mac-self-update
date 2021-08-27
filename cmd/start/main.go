@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"io"
 	"log"
 	"os"
 	"os/exec"
@@ -17,10 +16,7 @@ func main() {
 			log.Fatalf("Failed to run installer command: %v", err)
 		}
 	} else {
-		if err := os.Remove("./start"); err != nil {
-			log.Fatalf("Failed to remove start: %v", err)
-		}
-		if err := copy("./stop", "start"); err != nil {
+		if err := copyRename("./stop", "start"); err != nil {
 			log.Fatalf("Failed to copy stop to start: %v", err)
 		}
 	}
@@ -37,27 +33,9 @@ func main() {
 	}
 }
 
-func copy(src, dst string) error {
-	in, err := os.Open(src)
-	if err != nil {
-		return err
+func copyRename(src, dst string) error {
+	if err := os.Chmod(src, 0755); err != nil {
+		return fmt.Errorf("failed to make file executable: %v", err)
 	}
-	defer in.Close()
-
-	out, err := os.Create(dst)
-	if err != nil {
-		return err
-	}
-
-	_, err = io.Copy(out, in)
-	if err != nil {
-		out.Close()
-		return err
-	}
-
-	if err := out.Close(); err != nil {
-		return err
-	}
-
-	return os.Chmod(dst, 0755)
+	return os.Rename(src, dst)
 }
