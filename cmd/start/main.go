@@ -28,8 +28,12 @@ func main() {
 	fmt.Println("Re-running ./start command")
 	cmd := exec.Command("./start")
 	cmd.Stdin, cmd.Stdout, cmd.Stderr = os.Stdin, os.Stdout, os.Stderr
-	if err := cmd.Run(); err != nil {
-		log.Fatalf("Failed to run updated command: %v", err)
+	if err := cmd.Start(); err != nil {
+		log.Fatalf("Failed to start updated command: %v", err)
+	}
+
+	if err := cmd.Wait(); err != nil {
+		log.Fatalf("Failed to wait for updated command to finish: %v", err)
 	}
 }
 
