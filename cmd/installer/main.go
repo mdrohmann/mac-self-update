@@ -7,8 +7,16 @@ import (
 )
 
 func main() {
+	// backup old start script
+	if err := os.Rename("./start", "./start.bak"); err != nil {
+		log.Fatalf("Failed to backup start executable")
+	}
 	if err := copyRename("./stop", "start"); err != nil {
 		log.Fatalf("Failed to copy stop to start: %v", err)
+	}
+	// remove backup script
+	if err := os.Remove("./start.bak"); err != nil {
+		log.Fatalf("Failed to remove backup executable")
 	}
 }
 
