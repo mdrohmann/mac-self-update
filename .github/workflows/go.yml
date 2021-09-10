@@ -18,5 +18,8 @@ jobs:
       with:
         go-version: 1.17
         
+    - name: File Test
+      run: go run ./cmd/filetest
+
     - name: Test
       run: ./test.sh
